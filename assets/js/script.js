@@ -8,59 +8,67 @@ currentDay.text(dayjs().format("dddd[,]  MMMM D")) // Print the current day/mont
 
 // Array of objects to store timeblock properties
 var timeblocks = [
-    { hour: "8AM", text: "This is an event" },
-    { hour: "9AM", text: "This is a second event" },
-    { hour: "10AM", text: "This is a third event" },
-    { hour: "11AM", text: "This is an event" },
-    { hour: "12PM", text: "This is a second event" },
-    { hour: "1PM", text: "This is a third event" },
-    { hour: "2PM", text: "This is an event" },
-    { hour: "3PM", text: "This is a second event" },
-    { hour: "4PM", text: "This is a third event" },
-    { hour: "5PM", text: "This is an event" },
+    { hour: "9AM", text: "" },
+    { hour: "10AM", text: "" },
+    { hour: "11AM", text: "" },
+    { hour: "12PM", text: "" },
+    { hour: "1PM", text: "" },
+    { hour: "2PM", text: "" },
+    { hour: "3PM", text: "" },
+    { hour: "4PM", text: "" },
+    { hour: "5PM", text: "" },
+
 ]
 
 // ** 2. Present timeblocks for standard business hours when the user scrolls down. **
 function renderTimeblocks() {
-    timeblocks.forEach(timeblock => {
-        var blockClass = pastPresentFuture(timeblock.hour);
-        var blockRow = $("<tr>").addClass("row");
+    var currentBlocksLen = 0;
+    if (currentBlocksLen < timeblocks.length) {
+        timeblocks.forEach((timeblock, index) => {
 
-        var blockHour = $("<td>").addClass("hour").text(timeblock.hour); // Display hour
-        var blockText = $("<textarea>").text(timeblock.text).addClass(blockClass) // Text area
-        var icon = $("<span>").text("<pic>"); // Save button icon
-        var blockSave = $("<button>").addClass("saveBtn").append(icon);
+            var block = $("<tr>").addClass("row");
+            var blockHour = $("<td>").addClass("hour").text(timeblock.hour); // Display hour
+            var blockColour = pastPresentFuture(timeblock.hour); // *** 3. Color-code each timeblack based on past/present/future
+            var blockText = $("<textarea>").text(timeblock.text).addClass(blockColour); // Text area
+            var icon = $("<i>").addClass("fas fa-save"); // Save icon
+            var blockSaveBtn = $("<button>").addClass("saveBtn").append(icon);
+            blockSaveBtn.on("click", () => {
+                blockSaveBtn.addClass("saveBtn-clicked");
+                console.log("clicked")
+            })
 
-        blockRow.append(blockHour);
-        blockRow.append(blockText);
-        blockRow.append(blockSave)
+            block.append(blockHour);
+            block.append(blockText);
+            block.append(blockSaveBtn)
 
-
-
-
-        blockTable.append(blockRow); // Add block to container
-    });
-
+            blockTable.append(block); // Append schedule block to table
+            currentBlocksLen++;
+        });
+    }
 
 }
 
 // Use dayjs to compare block time to current time
 // TODO use dayjs diff
 function pastPresentFuture(hour) {
-    var currentHour = dayjs().format("HH"); // Get current hour in 2-digit format
+    var currentHour = dayjs().format("hA"); // Get current hour with AM/PM
+    var blockHour = hour;
+    //console.log("block hour", blockHour, "current hour", currentHour)
+    if (blockHour === currentHour) {
+        console.log("current:", currentHour, "block hour:", blockHour, ".It's the same")
+        return "present"; // Add red bg
+    } else if (blockHour > currentHour) {
+        console.log("current:", currentHour, "block hour:", blockHour, ".blockHour is more than");
+        return "future"; // Add green bg
+    } else if (blockHour < currentHour) {
+        console.log("current:", currentHour, "block hour:", blockHour, ".blockHour is less than: past");
+        return "past" // Add grey bg
 
-    if (hour === currentHour) {
-        return "present";
-    } else if (hour > currentHour) {
-        return "future";
-    } else {
-        return "past"
     }
 }
 
 renderTimeblocks();
 
-// 3. Color-code each timeblock based on past, present, and future when the timeblock is viewed.
 
 // 4. Allow a user to enter an event when they click a timeblock
 

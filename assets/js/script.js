@@ -8,7 +8,7 @@ currentDay.text(dayjs().format("dddd[,]  MMMM D")) // Print the current day/mont
 
 // Array of objects to store timeblock properties
 var timeblocks = [
-    { hour: "9AM", text: "" },
+    { hour: "9AM", text: "d" },
     { hour: "10AM", text: "" },
     { hour: "11AM", text: "" },
     { hour: "12PM", text: "" },
@@ -17,33 +17,38 @@ var timeblocks = [
     { hour: "3PM", text: "" },
     { hour: "4PM", text: "" },
     { hour: "5PM", text: "" },
-
 ]
 
 // ** 2. Present timeblocks for standard business hours when the user scrolls down. **
 function renderTimeblocks() {
     var currentBlocksLen = 0;
     if (currentBlocksLen < timeblocks.length) {
-        timeblocks.forEach((timeblock, index) => {
 
+        // Create a new block for each array element
+        timeblocks.forEach((timeblock, index) => {
             var block = $("<tr>").addClass("row");
             var blockHour = $("<td>").addClass("hour").text(timeblock.hour); // Display hour
-            var blockColour = pastPresentFuture(timeblock.hour); // *** 3. Color-code each timeblack based on past/present/future
-            var blockText = $("<textarea>").text(timeblock.text).addClass(blockColour); // Text area
-            var icon = $("<i>").addClass("fas fa-save"); // Save icon
-            var blockSaveBtn = $("<button>").addClass("saveBtn").append(icon);
+            var blockColour = pastPresentFuture(timeblock.hour); // *** 3. Color-code each timeblock based on status past/present/future
+            var blockText = $("<textarea>").val(timeblock.text).addClass(blockColour).addClass(`textarea-${index}`); // Text area
+            var saveIcon = $("<i>").addClass("fas fa-save"); // Save icon
+            var blockSaveBtn = $("<button>").addClass("saveBtn").append(saveIcon);
+            
+            // Save button click handler
             blockSaveBtn.on("click", () => {
                 blockSaveBtn.addClass("saveBtn-clicked");
+                updateEventText(index);
                 console.log("clicked")
             })
-
+            
+            // Append elements to block row
             block.append(blockHour);
             block.append(blockText);
             block.append(blockSaveBtn)
-
-            blockTable.append(block); // Append schedule block to table
+            // Append block row to block table
+            blockTable.append(block);
             currentBlocksLen++;
         });
+        console.log("current blocks:", currentBlocksLen)
     }
 
 }
@@ -65,6 +70,17 @@ function pastPresentFuture(hour) {
         return "past" // Add grey bg
 
     }
+}
+
+
+function updateEventText(index) {
+    console.log("button", index, "clicked.");
+
+    var newText = 
+    timeblocks[index].text = "TEXT CHANGED";
+    
+    
+    renderTimeblocks();
 }
 
 renderTimeblocks();

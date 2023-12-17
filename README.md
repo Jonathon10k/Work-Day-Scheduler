@@ -5,7 +5,7 @@ My submission for the Module 7 Work Day Scheduler Challenge
 
 ## Description
 
-This is my submission for the Module 7 Work Day Scheduler challenge. The challenge was to create a functional work-day planner using JavaScript and addtional libraries for the logic, in addition to Boostrap, HTML and CSS for layout and styling. The app was styled to closely match the example image provided by the instructional team.
+This is my submission for the Module 7 Work Day Scheduler challenge. The challenge was to create a functional work-day planner using JavaScript and additional libraries for the logic, in addition to Bootstrap, HTML and CSS for layout and styling. The app was styled to closely match the example image provided by the instructional team.
 
 ## Installation
 

@@ -97,6 +97,10 @@ header {
   background-color: #77dd77;
 }
 
+.status {
+  margin-top: 5px;
+}
+
 .hide {
   display: none;
 }

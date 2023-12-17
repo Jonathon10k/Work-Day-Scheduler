@@ -93,6 +93,10 @@ header {
   transition: all 0.3s ease-in-out;
 }
 
+.saveBtn-clicked {
+  background-color: #77dd77;
+}
+
 .hide {
   display: none;
 }

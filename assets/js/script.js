@@ -3,20 +3,20 @@ var blockContainer = $(".container");
 var statusDisplay = $(".status")
 var saveSpan = $(".save-span");
 
-// ** 1. Display the current day at the top of the calender when a user opens the planner. **
+// Display the current day at the top of the calender when a user opens the planner. **
 currentDay.text(dayjs().format("dddd[,]  MMMM D")) // Print the current day/month to currentDay <p>
 
 // Array of objects to store timeblock properties
 var timeblocks = [
-    { hour: "9AM", text: "" },
-    { hour: "10AM", text: "" },
-    { hour: "11AM", text: "" },
-    { hour: "12PM", text: "" },
-    { hour: "1PM", text: "" },
-    { hour: "2PM", text: "" },
-    { hour: "3PM", text: "" },
-    { hour: "4PM", text: "" },
-    { hour: "5PM", text: "" },
+    { hour: 9, hourStr: "9AM", text: "" },
+    { hour: 10, hourStr: "10AM", text: "" },
+    { hour: 11, hourStr: "11AM", text: "" },
+    { hour: 12, hourStr: "12PM", text: "" },
+    { hour: 13, hourStr: "1PM", text: "" },
+    { hour: 14, hourStr: "2PM", text: "" },
+    { hour: 15, hourStr: "3PM", text: "" },
+    { hour: 16, hourStr: "4PM", text: "" },
+    { hour: 17, hourStr: "5PM", text: "" },
 ]
 
 // Get initial block values from storage
@@ -31,7 +31,7 @@ function renderTimeblocks() {
     // Create a new block for each array element
     timeblocks.forEach((timeblock, index) => {
         var block = $("<div>").addClass("row");
-        var blockHour = $("<div>").addClass("hour").text(timeblock.hour); // Display hour
+        var blockHour = $("<div>").addClass("hour").text(timeblock.hourStr); // Display hour
         var blockColour = pastPresentFuture(timeblock.hour); // *** 3. Color-code each timeblock based on status past/present/future
         var blockText = $("<textarea>").val(timeblock.text).addClass(blockColour).addClass(`textarea-${index}`).addClass("col-md-10 col-sm-10"); // Text area
         var saveIcon = $("<i>").addClass("fas fa-save"); // Save icon
@@ -42,6 +42,10 @@ function renderTimeblocks() {
             blockSaveBtn.addClass("saveBtn-clicked");
             updateEventText(index);
             console.log("clicked")
+
+            setTimeout(() => {
+                blockSaveBtn.removeClass("saveBtn-clicked");
+            }, 1000)
         })
 
         // Append elements to block row
@@ -56,26 +60,28 @@ function renderTimeblocks() {
 // Use dayjs to compare block time to current time
 // TODO use dayjs diff
 function pastPresentFuture(hour) {
-    var currentHour = dayjs().format("hA"); // Get current hour with AM/PM
+    var currentHour = dayjs().format("H"); // Get current hour with AM/PM
     var blockHour = hour;
-    //console.log("block hour", blockHour, "current hour", currentHour)
-    if (blockHour === currentHour) {
-        console.log("current:", currentHour, "block hour:", blockHour, ".It's the same")
+
+    if (blockHour == currentHour) {
+        console.log("Now:", currentHour, "Block value:", blockHour, "[Current time].")
         return "present"; // Add red bg
     } else if (blockHour > currentHour) {
-        console.log("current:", currentHour, "block hour:", blockHour, ".blockHour is more than");
+        console.log("Now:", currentHour, "Block value:", blockHour, "[Future time].");
         return "future"; // Add green bg
     } else if (blockHour < currentHour) {
-        console.log("current:", currentHour, "block hour:", blockHour, ".blockHour is less than: past");
+        console.log("Now:", currentHour, "Block value:", blockHour, "[Past time].");
         return "past" // Add grey bg
     }
 }
+
 
 function updateEventText(index) {
     console.log("INDEX", index);
     var newText = $(`.textarea-${index}`).val();
     timeblocks[index].text = newText;
-     setStoredBlocks();
+    displaySaved();
+    setStoredBlocks();
 }
 
 // Function to get blocks object from localStorage

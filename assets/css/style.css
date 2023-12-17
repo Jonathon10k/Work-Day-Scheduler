@@ -2,6 +2,8 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   line-height: 1;
+  padding: 0;
+  margin: 0;
 }
 
 textarea {
@@ -12,18 +14,6 @@ textarea {
   border-left: 1px solid black;
   padding: 10px;
 }
-
-/* Added */
-.container {
-   
-}
-
-table {
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* End added */
 
 header {
   text-align: center;
@@ -50,12 +40,11 @@ header {
   flex-wrap: nowrap; /* Added */
 }
 
-
 .hour {
   background-color: #ffffff;
   color: #000000;
   border-top: 1px dashed #000000;
-width: 80px; /* Added */
+  width: 80px; /* Added */
 }
 
 .past {
@@ -84,8 +73,9 @@ width: 80px; /* Added */
 }
 
 /* Added */
-
-
+.container {
+  margin: 0 auto;
+}
 @keyframes changeCol {
   from {
     background-color: #06aed5;
@@ -105,3 +95,5 @@ width: 80px; /* Added */
   font-size: 20px;
   transition: all 0.3s ease-in-out;
 }
+
+/* End added */

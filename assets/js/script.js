@@ -1,14 +1,13 @@
 var currentDay = $("#currentDay");
 var blockContainer = $(".container");
-var blockTable = $("<table>")
-blockContainer.append(blockTable);
+
 
 // ** 1. Display the current day at the top of the calender when a user opens the planner. **
 currentDay.text(dayjs().format("dddd[,]  MMMM D")) // Print the current day/month to currentDay <p>
 
 // Array of objects to store timeblock properties
 var timeblocks = [
-    { hour: "9AM", text: "d" },
+    { hour: "9AM", text: "" },
     { hour: "10AM", text: "" },
     { hour: "11AM", text: "" },
     { hour: "12PM", text: "" },
@@ -19,38 +18,38 @@ var timeblocks = [
     { hour: "5PM", text: "" },
 ]
 
-// ** 2. Present timeblocks for standard business hours when the user scrolls down. **
+// Get initial block values from storage
+getStoredBlocks();
+// Initial schedule render
+renderTimeblocks();
+
+// Render blocks displaying business hours and schedule content
 function renderTimeblocks() {
-    var currentBlocksLen = 0;
-    if (currentBlocksLen < timeblocks.length) {
+    blockContainer.empty();
+      
+    // Create a new block for each array element
+    timeblocks.forEach((timeblock, index) => {
+        var block = $("<div>").addClass("row");
+        var blockHour = $("<div>").addClass("hour").text(timeblock.hour); // Display hour
+        var blockColour = pastPresentFuture(timeblock.hour); // *** 3. Color-code each timeblock based on status past/present/future
+        var blockText = $("<textarea>").val(timeblock.text).addClass(blockColour).addClass(`textarea-${index}`).addClass("col-md-10 col-sm-10"); // Text area
+        var saveIcon = $("<i>").addClass("fas fa-save"); // Save icon
+        var blockSaveBtn = $("<button>").addClass("saveBtn").append(saveIcon);
 
-        // Create a new block for each array element
-        timeblocks.forEach((timeblock, index) => {
-            var block = $("<tr>").addClass("row");
-            var blockHour = $("<td>").addClass("hour").text(timeblock.hour); // Display hour
-            var blockColour = pastPresentFuture(timeblock.hour); // *** 3. Color-code each timeblock based on status past/present/future
-            var blockText = $("<textarea>").val(timeblock.text).addClass(blockColour).addClass(`textarea-${index}`); // Text area
-            var saveIcon = $("<i>").addClass("fas fa-save"); // Save icon
-            var blockSaveBtn = $("<button>").addClass("saveBtn").append(saveIcon);
-            
-            // Save button click handler
-            blockSaveBtn.on("click", () => {
-                blockSaveBtn.addClass("saveBtn-clicked");
-                updateEventText(index);
-                console.log("clicked")
-            })
-            
-            // Append elements to block row
-            block.append(blockHour);
-            block.append(blockText);
-            block.append(blockSaveBtn)
-            // Append block row to block table
-            blockTable.append(block);
-            currentBlocksLen++;
-        });
-        console.log("current blocks:", currentBlocksLen)
-    }
+        // Save button click handler
+        blockSaveBtn.on("click", () => {
+            blockSaveBtn.addClass("saveBtn-clicked");
+            updateEventText(index);
+            console.log("clicked")
+        })
 
+        // Append elements to block row
+        block.append(blockHour);
+        block.append(blockText);
+        block.append(blockSaveBtn)
+        // Append block row to block table
+        blockContainer.append(block);
+    });
 }
 
 // Use dayjs to compare block time to current time
@@ -74,20 +73,30 @@ function pastPresentFuture(hour) {
 
 
 function updateEventText(index) {
-    console.log("button", index, "clicked.");
-
-    var newText = 
-    timeblocks[index].text = "TEXT CHANGED";
-    
-    
-    renderTimeblocks();
+    console.log("INDEX", index);
+    var newText = $(`.textarea-${index}`).val();
+    timeblocks[index].text = newText;
+    setStoredBlocks();
 }
 
-renderTimeblocks();
+// Function to get blocks object from localStorage
+function getStoredBlocks() {
+    if (localStorage.getItem("timeblocksStored") !== null) {
+        var storedBlocks = localStorage.getItem("timeblocksStored");
+        timeblocks = JSON.parse(storedBlocks);
+     } else {
+        console.log("No values in localStorage.")
+        return;
+     }
+}
 
+function setStoredBlocks() {
+    var savedBlocks = JSON.stringify(timeblocks);
+    localStorage.setItem("timeblocksStored", savedBlocks);
+    console.log("Blocks stored");
+}
 
-// 4. Allow a user to enter an event when they click a timeblock
-
-// 5. Save the event in local storage when the save button is clicked in that timeblock.
-
-// 6. Persist events between refreshes of a page
+// Clear localStorage for debug
+function clearLS() {
+    localStorage.removeItem("timeblocksStored");
+}

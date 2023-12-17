@@ -1,6 +1,7 @@
 var currentDay = $("#currentDay");
 var blockContainer = $(".container");
-
+var statusDisplay = $(".status")
+var saveSpan = $(".save-span");
 
 // ** 1. Display the current day at the top of the calender when a user opens the planner. **
 currentDay.text(dayjs().format("dddd[,]  MMMM D")) // Print the current day/month to currentDay <p>
@@ -26,7 +27,7 @@ renderTimeblocks();
 // Render blocks displaying business hours and schedule content
 function renderTimeblocks() {
     blockContainer.empty();
-      
+
     // Create a new block for each array element
     timeblocks.forEach((timeblock, index) => {
         var block = $("<div>").addClass("row");
@@ -67,16 +68,14 @@ function pastPresentFuture(hour) {
     } else if (blockHour < currentHour) {
         console.log("current:", currentHour, "block hour:", blockHour, ".blockHour is less than: past");
         return "past" // Add grey bg
-
     }
 }
-
 
 function updateEventText(index) {
     console.log("INDEX", index);
     var newText = $(`.textarea-${index}`).val();
     timeblocks[index].text = newText;
-    setStoredBlocks();
+     setStoredBlocks();
 }
 
 // Function to get blocks object from localStorage
@@ -84,19 +83,32 @@ function getStoredBlocks() {
     if (localStorage.getItem("timeblocksStored") !== null) {
         var storedBlocks = localStorage.getItem("timeblocksStored");
         timeblocks = JSON.parse(storedBlocks);
-     } else {
+    } else {
         console.log("No values in localStorage.")
         return;
-     }
+    }
 }
 
 function setStoredBlocks() {
     var savedBlocks = JSON.stringify(timeblocks);
     localStorage.setItem("timeblocksStored", savedBlocks);
     console.log("Blocks stored");
+    displaySaved();
 }
 
 // Clear localStorage for debug
 function clearLS() {
     localStorage.removeItem("timeblocksStored");
+}
+
+// Display status message on save and hide after time elapse
+function displaySaved() {
+    var saveLocation = $("<span>").addClass("save-span").text("localStorage");
+    statusDisplay.text("Appointment added to ");
+    statusDisplay.append(saveLocation);
+    statusDisplay.removeClass("hide");
+
+    setTimeout(() => { // Hide message after 4 secs
+        statusDisplay.addClass("hide");
+    }, 4000)
 }

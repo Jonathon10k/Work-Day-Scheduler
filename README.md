@@ -1,7 +1,7 @@
 # Work Day Scheduler (Module 7 Challenge)
 My submission for the Module 7 Work Day Scheduler Challenge
 
-![Work Day Scheduler preview ](./assets/images/Screenshot.png)
+![Work Day Scheduler preview ](./assets/images/preview.png)
 
 ## Description
 
